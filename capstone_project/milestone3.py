@@ -8,4 +8,7 @@ def FeedbackControl(X,Xd,Xd_next,Kp,Ki,delta_t):
     Xerr_intg=X_err*delta_t+Xerr_intg
     V=np.dot(mr.Adjoint(mr.MatrixLog6(np.dot(mr.TransInv(Xd),Xd_next))),Vd)\
     +np.dot(Kp,X_err)+np.dot(Ki,Xerr_intg)
+    Jarm=mr.JacobianBody(dt.B_list,dt.Theta_list)
+    Jbase=np.dot(mr.Adjoint(np.dot(mr.TransInv(mr.FKinSpace(dt.M0e,dt.B_list,dt.Theta_list))\
+    ,mr.TransInv(dt.Tb0))),dt.F)
     
