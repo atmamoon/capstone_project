@@ -18,63 +18,27 @@ def rearrange(mat,gripper=0):
 
 def TrajectoryGenerator(Tse_initial,Tsc_initial,Tsc_final,Tce_grasp,Tce_standoff):
     Xse=[]
-    d=10
+    d=0
+    notd=1
     N=400
     Tf=4
     method=3
-    Tse_final=Tsc_initial
-    #Tse_final[2,3]=Tsc_initial[2,3]-d
-    Tse_final=np.dot(Tsc_initial,Tce_standoff)
-    X=mr.ScrewTrajectory(Tse_initial,Tse_final,Tf,N,method)
-    for i in X:
-        Xse.append(rearrange(i))
 
+    sequence=[[Tsc_initial,Tce_standoff,d],[Tsc_initial,Tce_grasp,d],[-1,notd],[Tsc_initial,Tce_standoff,notd],[Tsc_final,Tce_standoff,notd],\
+    [Tsc_final,Tce_grasp,notd],[-1,d],[Tsc_final,Tce_standoff,d]]
 
-    Tse_initial=X[-1]
-    Tse_final=np.dot(Tsc_initial,Tce_grasp)
-    X=mr.ScrewTrajectory(Tse_initial,Tse_final,Tf,N,method)
-    for i in X:
-        Xse.append(rearrange(i))
+    for i in sequence:
+        if len(i)!=2:
+            Tse_final=np.dot(i[0],i[1])
+            X=mr.ScrewTrajectory(Tse_initial,Tse_final,Tf,N,method)
+            for j in X:
+                Xse.append(rearrange(j,i[2]))
+            Tse_initial=X[-1]
+        else:
+            for k in range(63):
+                Xse.append(rearrange(Tse_initial,i[1]))
 
-
-    Tse_initial=X[-1]
-    for i in range(63):
-        Xse.append(rearrange(Tse_initial,1))
-
-
-    Tse_initial=X[-1]
-    Tse_final=np.dot(Tsc_initial,Tce_standoff)
-    X=mr.ScrewTrajectory(Tse_initial,Tse_final,Tf,N,method)
-    for i in X:
-        Xse.append(rearrange(i,1))
-
-
-    Tse_initial=X[-1]
-    Tse_final=np.dot(Tsc_final,Tce_standoff)
-    X=mr.ScrewTrajectory(Tse_initial,Tse_final,Tf,N,method)
-    for i in X:
-        Xse.append(rearrange(i,1))
-
-
-    Tse_initial=X[-1]
-    Tse_final=np.dot(Tsc_final,Tce_grasp)
-    X=mr.ScrewTrajectory(Tse_initial,Tse_final,Tf,N,method)
-    for i in X:
-        Xse.append(rearrange(i,1))
-
-
-    Tse_initial=X[-1]
-    for i in range(63):
-        Xse.append(rearrange(Tse_initial))
-
-
-    Tse_initial=X[-1]
-    Tse_final=np.dot(Tsc_final,Tce_standoff)
-    X=mr.ScrewTrajectory(Tse_initial,Tse_final,Tf,N,method)
-    for i in X:
-        Xse.append(rearrange(i))
-
-    print(Xse)
+    #print(Xse)
     np.savetxt("milestone2.csv",Xse,delimiter=',')
 
 q=[0,0,0]
@@ -88,5 +52,5 @@ Tse=np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0.65],[0,0,0,1]])
 Tsci=np.array([[1,0,0,1],[0,1,0,0],[0,0,1,0.025],[0,0,0,1]])
 Tsc_goal=np.array([[0,1,0,0],[-1,0,0,-1],[0,0,1,0.025],[0,0,0,1]])
 Tcef=np.array([[0,0,1,d3/2],[0,1,0,0],[-1,0,0,0],[0,0,0,1]])
-Tce_stand=np.array([[0,0,1,d3/2],[0,1,0,0],[-1,0,0,0.10],[0,0,0,1]])
+Tce_stand=np.array([[0,0,1,d3/2],[0,1,0,0],[-1,0,0,0.30],[0,0,0,1]])
 TrajectoryGenerator(Tse,Tsci,Tsc_goal,Tcef,Tce_stand)
