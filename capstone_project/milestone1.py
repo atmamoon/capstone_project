@@ -7,7 +7,7 @@ def NextState(current_config,controls,delta_t,speed_limits=[0,0]):
             controls[i]=speed_limits[1]
         elif controls[i]<speed_limits[0]:
             controls[i]=speed_limits[0]
-    print(controls)
+
     for i in range(3,12):
         next_config[i]=current_config[i]+controls[i-3]*delta_t
     l=0.47/2
