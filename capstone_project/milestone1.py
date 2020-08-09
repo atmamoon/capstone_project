@@ -27,19 +27,19 @@ def NextState(current_config,controls,delta_t,speed_limits=[0,0]):
     return next_config
 
 
-
-speed=np.array([4.5,4.5,4.5,4.5,4.5,10,10,10,10])
-limits=[-15,15]
-initial_config=np.zeros(12)
-configuration=[]
-for i in range(100):
-    if i<63:
-        initial_config=NextState(initial_config,speed,0.01,limits)
-        initial_config=np.append(initial_config,[1])
-        configuration.append(initial_config)
-    else:
-        initial_config=NextState(initial_config,speed,0.01,limits)
-        initial_config=np.append(initial_config,[0])
-        configuration.append(initial_config)
-configuration=np.array(configuration)
-np.savetxt("milestone1.csv",configuration,delimiter=',')
+if __name__=="__main__":
+    speed=np.array([4.5,4.5,4.5,4.5,4.5,10,10,10,10])
+    limits=[-15,15]
+    initial_config=np.zeros(12)
+    configuration=[]
+    for i in range(100):
+        if i<63:
+            initial_config=NextState(initial_config,speed,0.01,limits)
+            initial_config=np.append(initial_config,[1])
+            configuration.append(initial_config)
+        else:
+            initial_config=NextState(initial_config,speed,0.01,limits)
+            initial_config=np.append(initial_config,[0])
+            configuration.append(initial_config)
+    configuration=np.array(configuration)
+    np.savetxt("milestone1.csv",configuration,delimiter=',')

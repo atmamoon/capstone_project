@@ -21,22 +21,17 @@ def FeedbackControl(X,Xd,Xd_next,Kp,Ki,delta_t):
     V[abs(V)<tolerance]=0.0
     u=np.dot(np.linalg.pinv(J),V)
     u[abs(u)<tolerance]=0
-    print("error",X_err)
-    print("Vd",Vd)
-    print("V",V)
-    print("adj V",mr.Adjoint(np.dot(mr.TransInv(X),Xd)))
-    print("J",J)
-
     return u
 
-X_d=np.array([[0,0,1,0.5],[0,1,0,0],[-1,0,0,0.5],[0,0,0,1]])
-X_d_nxt=np.array([[0,0,1,0.6],[0,1,0,0],[-1,0,0,0.3],[0,0,0,1]])
-X_=np.array([[0.170,0,0.985,0.387],[0,1,0,0],[-0.985,0,0.170,0.570],[0,0,0,1]])
-'''Kp=np.identity(4)
-Kp=Kp*0
-Ki=np.identity(4)
-Ki=Ki*0'''
-Ki=0
-Kp=1
-deltat=0.01
-print(FeedbackControl(X_,X_d,X_d_nxt,Kp,Ki,deltat))
+if __name__=="__main__":
+    X_d=np.array([[0,0,1,0.5],[0,1,0,0],[-1,0,0,0.5],[0,0,0,1]])
+    X_d_nxt=np.array([[0,0,1,0.6],[0,1,0,0],[-1,0,0,0.3],[0,0,0,1]])
+    X_=np.array([[0.170,0,0.985,0.387],[0,1,0,0],[-0.985,0,0.170,0.570],[0,0,0,1]])
+    '''Kp=np.identity(4)
+    Kp=Kp*0
+    Ki=np.identity(4)
+    Ki=Ki*0'''
+    Ki=0
+    Kp=1
+    deltat=0.01
+    print(FeedbackControl(X_,X_d,X_d_nxt,Kp,Ki,deltat))

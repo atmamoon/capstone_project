@@ -39,18 +39,21 @@ def TrajectoryGenerator(Tse_initial,Tsc_initial,Tsc_final,Tce_grasp,Tce_standoff
                 Xse.append(rearrange(Tse_initial,i[1]))
 
     #print(Xse)
-    np.savetxt("milestone2.csv",Xse,delimiter=',')
+    #np.savetxt("milestone2.csv",Xse,delimiter=',')
+    return Xse
 
-q=[0,0,0]
-d3=0.043
-Tsb=np.array([[np.cos(q[0]),-np.sin(q[0]),0,q[1]],[np.sin(q[0]),np.cos(q[0]),0,q[2]],[0,0,1,0.0963],[0,0,0,1]])
-Tb0=np.array([[1,0,0,0.1662],[0,1,0,0],[0,0,1,0.0026],[0,0,0,1]])
-M0e=np.array([[1,0,0,0.033],[0,1,0,0],[0,0,1,0.6546],[0,0,0,1]])
-#Tse=np.dot(Tsb,np.dot(Tb0,M0e))
+if __name__=="__main__":
+    q=[0,0,0]
+    d3=0.043
+    Tsb=np.array([[np.cos(q[0]),-np.sin(q[0]),0,q[1]],[np.sin(q[0]),np.cos(q[0]),0,q[2]],[0,0,1,0.0963],[0,0,0,1]])
+    Tb0=np.array([[1,0,0,0.1662],[0,1,0,0],[0,0,1,0.0026],[0,0,0,1]])
+    M0e=np.array([[1,0,0,0.033],[0,1,0,0],[0,0,1,0.6546],[0,0,0,1]])
+    #Tse=np.dot(Tsb,np.dot(Tb0,M0e))
 
-Tse=np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0.65],[0,0,0,1]])
-Tsci=np.array([[1,0,0,1],[0,1,0,0],[0,0,1,0.025],[0,0,0,1]])
-Tsc_goal=np.array([[0,1,0,0],[-1,0,0,-1],[0,0,1,0.025],[0,0,0,1]])
-Tcef=np.array([[0,0,1,d3/2],[0,1,0,0],[-1,0,0,0],[0,0,0,1]])
-Tce_stand=np.array([[0,0,1,d3/2],[0,1,0,0],[-1,0,0,0.30],[0,0,0,1]])
-TrajectoryGenerator(Tse,Tsci,Tsc_goal,Tcef,Tce_stand)
+    Tse=np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0.65],[0,0,0,1]])
+    Tsci=np.array([[1,0,0,1],[0,1,0,0],[0,0,1,0.025],[0,0,0,1]])
+    Tsc_goal=np.array([[0,1,0,0],[-1,0,0,-1],[0,0,1,0.025],[0,0,0,1]])
+    Tcef=np.array([[0,0,1,d3/2],[0,1,0,0],[-1,0,0,0],[0,0,0,1]])
+    Tce_stand=np.array([[0,0,1,d3/2],[0,1,0,0],[-1,0,0,0.30],[0,0,0,1]])
+    X=TrajectoryGenerator(Tse,Tsci,Tsc_goal,Tcef,Tce_stand)
+    np.savetxt("milestone2.csv",X,delimiter=',')
