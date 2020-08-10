@@ -31,32 +31,36 @@ def q_list(L):
 
 
 def Theta_list(L):
-    joint_limits=[[-2.932,2.932],[-9999,9999],[-2.620,2.179],[-0.121,1.780],[-9999,9999]]
+    #joint_limits=[[-2.932,2.932],[-9999,9999],[-2.620,2.179],[-0.121,1.780],[-9999,9999]]
+    joint_limits=[[-9999,9999],[-9999,9999],[-2.163,2.179],[-1.78,1.780],[-9999,9999]]
+    #joint_limits=[[-9999,9999],[-9999,9999],[-9999,9999],[-9999,9999],[-9999,9999]]
+    #joint_limits=[[-2.932,2.932],[-1.117,1.553],[-2.620,2.530],[-1.780,1.780],[-9999,9999]]
+
     theta=np.zeros(5)
     for i in range(3,8):
         if L[i]>joint_limits[i-3][0] and L[i]<joint_limits[i-3][1]:
             theta[i-3]=L[i]
         else:
-            theta[i-3]=0.0
+            theta[i-3]=0
     return theta
 
 
 
 final_configuration=[]
-initial_configuration=[0.0,-0.210,0,0,0.714,-2.054,1.426,0,0,0,0,0,0]
+initial_configuration=[0,-0.210,0,0,0.714,-2.054,1.426,0,0,0,0,0,0]
 final_configuration.append(initial_configuration)
 
 q=q_list(final_configuration[-1])
 Tsb=np.array([[np.cos(q[0]),-np.sin(q[0]),0,q[1]],[np.sin(q[0]),np.cos(q[0]),0,q[2]],[0,0,1,0.0963],[0,0,0,1]])
 T0e=mr.FKinBody(dt.M0e,dt.B_list,Theta_list(final_configuration[-1]))
 Tse_current=np.dot(Tsb,np.dot(dt.Tb0,T0e))
-#Tse_current=np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0.65],[0,0,0,1]])
+#Tse_current=np.array([[0,0,1,0],[0,1,0,0],[-1,0,0,0.5],[0,0,0,1]])
 RT=m2.TrajectoryGenerator(Tse_current,dt.Tsci,dt.Tsc_goal,dt.Tcef,dt.Tce_stand)
 N,m=np.shape(RT)
-Kp=0
-Ki=0
+Kp=0.15
+Ki=0.0
 delta_t=0.01
-speed_limit=[-11,11]
+speed_limit=[-300,301]
 Xerr_integral=[0,0,0,0,0,0]
 
 for i in range(N-1):
@@ -69,13 +73,13 @@ for i in range(N-1):
     Xd_next=rearrange_to_se3(RT[i+1])
     U,Xerr_integral=m3.FeedbackControl(Tse_current,Xd,Xd_next,Kp,Ki,delta_t,Theta_list(final_configuration[-1]),Xerr_integral)
     new_configuration=m1.NextState(final_configuration[-1],controls_rearrange(U),delta_t,speed_limit)
-    '''if i==N-2:
-        print(new_configuration)
-        print(U)
-        print(RT[i][12])'''
+    if i==N-2:
+        print(Xd_next)
+        #print(new_configuration)
     new_configuration=np.append(new_configuration,[RT[i][12]])
     final_configuration.append(new_configuration)
 
 print(Xerr_integral)
+print(Tse_current)
 #print(final_configuration[-1])
 np.savetxt("final.csv",final_configuration,delimiter=',')

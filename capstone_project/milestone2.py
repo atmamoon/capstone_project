@@ -20,9 +20,9 @@ def TrajectoryGenerator(Tse_initial,Tsc_initial,Tsc_final,Tce_grasp,Tce_standoff
     Xse=[]
     d=0
     notd=1
-    N=800
+    N=400
     Tf=4
-    method=3
+    method=5
 
     sequence=[[Tsc_initial,Tce_standoff,d],[Tsc_initial,Tce_grasp,d],[-1,notd],[Tsc_initial,Tce_standoff,notd],[Tsc_final,Tce_standoff,notd],\
     [Tsc_final,Tce_grasp,notd],[-1,d],[Tsc_final,Tce_standoff,d]]

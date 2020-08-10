@@ -3,29 +3,31 @@ import core as mr
 import data as dt
 
 def FeedbackControl(X,Xd,Xd_next,Kp,Ki,delta_t,theta,Xerr_intg=[]):
-    tolerance=1e-10
+    tolerance=1e-4
     #Xerr_intg=np.zeros((4,4))
     if len(Xerr_intg)==0:
         Xerr_intg=np.zeros(6)
     X_err=mr.se3ToVec(mr.MatrixLog6(np.dot(mr.TransInv(X),Xd)))
-    Vd=mr.se3ToVec(mr.MatrixLog6(np.dot(mr.TransInv(Xd),Xd_next))*(1/delta_t))
+    Vd=mr.se3ToVec(mr.MatrixLog6(np.dot(mr.TransInv(Xd),Xd_next)))*(1/delta_t)
     Xerr_intg=X_err*delta_t+Xerr_intg
     #V=np.dot(mr.Adjoint(mr.MatrixLog6(np.dot(mr.TransInv(Xd),Xd_next))),Vd)\
     #+mr.se3ToVec(np.dot(Kp,X_err))+mr.se3ToVec(np.dot(Ki,Xerr_intg))
     V=np.dot(mr.Adjoint(np.dot(mr.TransInv(X),Xd)),Vd)\
     +Kp*X_err+Ki*Xerr_intg
     Jarm=mr.JacobianBody(dt.B_list,theta)
-    Jbase=np.dot(mr.Adjoint(np.dot(mr.TransInv(mr.FKinSpace(dt.M0e,dt.B_list,theta))\
+    Jbase=np.dot(mr.Adjoint(np.dot(mr.TransInv(mr.FKinBody(dt.M0e,dt.B_list,theta))\
     ,mr.TransInv(dt.Tb0))),dt.F)
     J=np.append(Jbase,Jarm,axis=1)
-    V=np.transpose(V)
-    V[abs(V)<tolerance]=0.0
+    J[abs(J)<tolerance]=0
+    #V=np.transpose(V)
+    #V[abs(V)<tolerance]=0.0
     u=np.dot(np.linalg.pinv(J),V)
-    u[abs(u)<tolerance]=0
+    #u[abs(u)<tolerance]=0
     if __name__=="__main__":
         print("Jacobian",J)
         return u
     else:
+        #print(np.linalg.pinv(J))
         return [u,Xerr_intg]
 
 if __name__=="__main__":
