@@ -68,7 +68,7 @@ T0e=mr.FKinBody(dt.M0e,dt.B_list,Theta_list(final_configuration[-1]))
 Tse_current=np.array([[0,0,1,0],[0,1,0,0],[-1,0,0,0.5],[0,0,0,1]])
 RT=m2.TrajectoryGenerator(Tse_current,dt.Tsci,dt.Tsc_goal,dt.Tcef,dt.Tce_stand)
 N,m=np.shape(RT)
-
+Xerr=[]
 
 for i in range(N-1):
 
@@ -78,15 +78,17 @@ for i in range(N-1):
     Tse_current=np.dot(Tsb,np.dot(dt.Tb0,T0e))
     Xd=rearrange_to_se3(RT[i])
     Xd_next=rearrange_to_se3(RT[i+1])
-    U,Xerr_integral=m3.FeedbackControl(Tse_current,Xd,Xd_next,Kp,Ki,delta_t,Theta_list(final_configuration[-1],controls_rearrange(U)),Xerr_integral)
+    U,Xerr_integral,err=m3.FeedbackControl(Tse_current,Xd,Xd_next,Kp,Ki,delta_t,Theta_list(final_configuration[-1],controls_rearrange(U)),Xerr_integral)
     new_configuration=m1.NextState(final_configuration[-1],controls_rearrange(U),delta_t,speed_limit)
     if i==N-2:
         print(Xd_next)
         #print(new_configuration)
     new_configuration=np.append(new_configuration,[RT[i][12]])
     final_configuration.append(new_configuration)
+    Xerr.append(err)
 
 print(Xerr_integral)
 print(Tse_current)
 #print(final_configuration[-1])
 np.savetxt("final.csv",final_configuration,delimiter=',')
+np.savetxt("error.csv",Xerr,delimiter=',')
