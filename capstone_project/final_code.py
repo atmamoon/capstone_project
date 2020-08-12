@@ -7,7 +7,7 @@ import milestone2 as m2
 import milestone3 as m3
 
 
-Kp=3
+Kp=2
 Ki=1
 delta_t=0.01
 speed_limit=[-30,30]
