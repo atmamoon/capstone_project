@@ -1,5 +1,17 @@
+'''
+MOBILE MANIPULATION CAPSTONE
+
+SK MOHAMMED MAMOON MONDAL
+
+
+Contains code for milestone1
+'''
+
+
 import numpy as np
 
+#NextState for milestone1
+#Returns configuration of the bot 10ms after the current configuration
 def NextState(current_config,controls,delta_t,speed_limits=[0,0]):
     next_config=np.zeros(12)
     for i in range(9):
@@ -22,11 +34,12 @@ def NextState(current_config,controls,delta_t,speed_limits=[0,0]):
     delta_q=np.dot(np.array([[1,0,0],[0,np.cos(next_config[0]),-np.sin(next_config[0])],[0,np.sin(next_config[0]),np.cos(next_config[0])]]),delta_qb)
     for i in range(0,3):
         next_config[i]=current_config[i]+delta_q[i]
-    #print(next_config)
-    #print(Vb)
     return next_config
 
 
+
+#block which calls the NextState() if this file is run directly and not called from another file
+#Helpful for debugging
 if __name__=="__main__":
     speed=np.array([4.5,4.5,4.5,4.5,4.5,10,10,10,10])
     limits=[-15,15]

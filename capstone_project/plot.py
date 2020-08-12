@@ -1,12 +1,13 @@
+'''
+MOBILE MANIPULATION CAPSTONE
+
+SK MOHAMMED MAMOON MONDAL
+
+PLOTS THE ERROR CURVE WITH RESPECT TO TIME WITH MATPLOTLIB PYPLOT
+'''
 import matplotlib.pyplot as plt
 import numpy as np
-'''
-class error:
-    total_time=0
-    def __init__(self,e):
-        self.error_value=e
-        total_time+=0.01
-        self.time=error.total_time'''
+
 
 x=[]
 plot=np.genfromtxt("error.csv",delimiter=',')

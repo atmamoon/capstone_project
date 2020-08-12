@@ -1,7 +1,18 @@
+'''
+MOBILE MANIPULATION CAPSTONE
+
+SK MOHAMMED MAMOON MONDAL
+
+Contains code for milestone3
+
+'''
+#importing modules
 import numpy as np
 import core as mr
 import data as dt
 
+
+#function to test joint limits
 def test_joint_limits(L,u,delta_t):
     #joint_limits=[[-2.932,2.932],[-9999,9999],[-2.620,2.179],[-0.121,1.780],[-9999,9999]]
     #joint_limits=[[-9999,9999],[-255,267],[-205.163,205.179],[-205,205.780],[-9999,9999]]
@@ -19,6 +30,7 @@ def test_joint_limits(L,u,delta_t):
             success=False
     return [success,theta]
 
+#returns the controls(joint and wheel velocities) based on for Feedforward plus Feedback Control
 def FeedbackControl(X,Xd,Xd_next,Kp,Ki,delta_t,theta,Xerr_intg=[]):
     tolerance=1e-2
     #Xerr_intg=np.zeros((4,4))
@@ -31,14 +43,7 @@ def FeedbackControl(X,Xd,Xd_next,Kp,Ki,delta_t,theta,Xerr_intg=[]):
     #+mr.se3ToVec(np.dot(Kp,X_err))+mr.se3ToVec(np.dot(Ki,Xerr_intg))
     V=np.dot(mr.Adjoint(np.dot(mr.TransInv(X),Xd)),Vd)\
     +Kp*X_err+Ki*Xerr_intg
-    '''Jarm=mr.JacobianBody(dt.B_list,theta)
-    Jbase=np.dot(mr.Adjoint(np.dot(mr.TransInv(mr.FKinBody(dt.M0e,dt.B_list,theta))\
-    ,mr.TransInv(dt.Tb0))),dt.F)
-    J=np.append(Jbase,Jarm,axis=1)
-    J[abs(J)<tolerance]=0'''
-    #V=np.transpose(V)
-    #V[abs(V)<tolerance]=0.0
-    #evaluate_joints_limits=True
+
     while True:
         Jarm=mr.JacobianBody(dt.B_list,theta)
         Jbase=np.dot(mr.Adjoint(np.dot(mr.TransInv(mr.FKinBody(dt.M0e,dt.B_list,theta))\
@@ -54,25 +59,19 @@ def FeedbackControl(X,Xd,Xd_next,Kp,Ki,delta_t,theta,Xerr_intg=[]):
         else:
             continue
 
-    #J_inv=np.linalg.pinv(J)
-    #J_inv[abs(J_inv)>tolerance]=0
-    #u=np.dot(J_inv,V)
-    #u[abs(u)<tolerance]=0
+
     if __name__=="__main__":
         print("Jacobian",J)
         return u
     else:
-        #print(np.linalg.pinv(J))
         return [u,Xerr_intg,X_err]
 
+#block which calls the FeedbackControl() if this file is run directly and not called from another file
+#Helpful for debugging
 if __name__=="__main__":
     X_d=np.array([[0,0,1,0.5],[0,1,0,0],[-1,0,0,0.5],[0,0,0,1]])
     X_d_nxt=np.array([[0,0,1,0.6],[0,1,0,0],[-1,0,0,0.3],[0,0,0,1]])
     X_=np.array([[0.170,0,0.985,0.387],[0,1,0,0],[-0.985,0,0.170,0.570],[0,0,0,1]])
-    '''Kp=np.identity(4)
-    Kp=Kp*0
-    Ki=np.identity(4)
-    Ki=Ki*0'''
     Ki=0
     Kp=0
     deltat=0.01

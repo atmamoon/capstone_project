@@ -1,13 +1,18 @@
+'''
+MOBILE MANIPULATION CAPSTONE
+
+SK MOHAMMED MAMOON MONDAL
+
+
+Contains code for milestone2
+'''
+
+
 import numpy as np
 import core as mr
 
+#rearranges the se3 matrix to 13 element configuration vector
 def rearrange(mat,gripper=0):
-    '''
-    ordered_mat=[]
-    for i in mat:
-        ordered_mat.append([i[k,j] for k in range(3) for j in range(4)])
-    print(ordered_mat)
-    return ordered_mat'''
     ret=[mat[k,j] for k in range(3) for j in range(3)]
     ret.append(mat[0,3])
     ret.append(mat[1,3])
@@ -15,7 +20,7 @@ def rearrange(mat,gripper=0):
     ret.append(gripper)
     return ret
 
-
+#Generates the referance trajectory
 def TrajectoryGenerator(Tse_initial,Tsc_initial,Tsc_final,Tce_grasp,Tce_standoff):
     Xse=[]
     d=0
@@ -38,10 +43,11 @@ def TrajectoryGenerator(Tse_initial,Tsc_initial,Tsc_final,Tce_grasp,Tce_standoff
             for k in range(63):
                 Xse.append(rearrange(Tse_initial,i[1]))
 
-    #print(Xse)
-    #np.savetxt("milestone2.csv",Xse,delimiter=',')
     return Xse
 
+
+#block which calls the TrajectoryGenerator() if this file is run directly and not called from another file
+#Helpful for debugging
 if __name__=="__main__":
     q=[0,0,0]
     d3=0.043
