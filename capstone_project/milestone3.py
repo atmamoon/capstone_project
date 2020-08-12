@@ -20,7 +20,7 @@ def test_joint_limits(L,u,delta_t):
     return [success,theta]
 
 def FeedbackControl(X,Xd,Xd_next,Kp,Ki,delta_t,theta,Xerr_intg=[]):
-    tolerance=1e-2
+    tolerance=1e-6
     #Xerr_intg=np.zeros((4,4))
     if len(Xerr_intg)==0:
         Xerr_intg=np.zeros(6)

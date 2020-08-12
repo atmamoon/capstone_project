@@ -7,8 +7,8 @@ import milestone2 as m2
 import milestone3 as m3
 
 
-Kp=3
-Ki=1
+Kp=0.
+Ki=0
 delta_t=0.01
 speed_limit=[-30,30]
 Xerr_integral=[0,0,0,0,0,0]
@@ -58,14 +58,14 @@ def Theta_list(L,u=U):
 
 final_configuration=[]
 #initial_configuration=[0,-0.210,0,0,0.714,-2.054,1.426,0,0,0,0,0,0]
-initial_configuration=[0.6,-0.210,0,0,0,-0,0,0,0,0,0,0,0]
+initial_configuration=[3,0.210,0,0,0,-0,0,0,0,0,0,0,0]
 final_configuration.append(initial_configuration)
 
 q=q_list(final_configuration[-1])
 Tsb=np.array([[np.cos(q[0]),-np.sin(q[0]),0,q[1]],[np.sin(q[0]),np.cos(q[0]),0,q[2]],[0,0,1,0.0963],[0,0,0,1]])
 T0e=mr.FKinBody(dt.M0e,dt.B_list,Theta_list(final_configuration[-1]))
 #Tse_current=np.dot(Tsb,np.dot(dt.Tb0,T0e))
-Tse_current=np.array([[0,0,1,0],[0,1,0,0],[-1,0,0,0.5],[0,0,0,1]])
+Tse_current=np.array([[-1,0,0,0],[0,-1,0,0],[-1,0,0,0.5],[0,0,0,1]])
 RT=m2.TrajectoryGenerator(Tse_current,dt.Tsci,dt.Tsc_goal,dt.Tcef,dt.Tce_stand)
 N,m=np.shape(RT)
 Xerr=[]
