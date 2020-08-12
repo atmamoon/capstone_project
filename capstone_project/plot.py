@@ -22,7 +22,7 @@ for j in range(m):
 
 for k in x:
     plt.plot(t,k,'r')
-plt.title('best')
+plt.title('new')
 plt.show()
 
 
